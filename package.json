@@ -15,5 +15,8 @@
     "svelte": "^5.39.5",
     "tailwindcss": "^4.1.13",
     "typescript": "^5.9.2"
+  },
+  "engines": {
+    "node": "22.17.1"
   }
 }
