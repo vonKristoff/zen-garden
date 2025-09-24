@@ -1,0 +1,98 @@
+---
+import { SITE_TITLE } from "../consts";
+import HeaderLink from "$lib/components/HeaderLink.astro";
+import Icon from "./Icon.astro";
+---
+
+<header class="satuation-filter font-tertiary p-4">
+  <nav>
+    <div class="flex flex-row items-center font-secondary">
+      <!-- <Icon ctx="shroom-2" size="3" src="shapes" colour="forestgreen" /> -->
+      <a href="/">{SITE_TITLE}</a>
+    </div>
+    <div
+      class="gap-16 justify-center items-center internal-links text-start hidden md:flex font-primary text-xl"
+    >
+      <HeaderLink href="/a">Story</HeaderLink>
+      <HeaderLink href="/c">Where</HeaderLink>
+      <HeaderLink href="/d">Why</HeaderLink>
+      <HeaderLink href="/b">Thanks</HeaderLink>
+    </div>
+    <div class="flex justify-end">
+      <!-- <Icon ctx="map" colour="forestgreen" /> -->
+    </div>
+  </nav>
+</header>
+<style>
+  header {
+    position: fixed;
+    width: 100dvw;
+    overflow-x: hidden;
+    top: 0;
+    margin: 0;
+    /* border-bottom: 0.25em solid white; */
+    /* background-color: rgb(86, 54, 28); */
+    background-color: rgb(243 108 71 / 90%);
+    box-shadow: 0 2px 8px rgba(var(--black), 5%);
+    z-index: 1001;
+    transition:
+      filter,
+      background-color 1s;
+    &.satuation-filter {
+      /* filter: saturate(0.35);
+      background-color: rgba(255, 255, 255, 0.724); */
+    }
+  }
+  h2 {
+    margin: 0;
+    font-size: 1em;
+  }
+
+  h2 a,
+  h2 a.active {
+    text-decoration: none;
+  }
+  nav {
+    display: grid;
+    align-items: center;
+    justify-content: space-between;
+    grid-template-columns: 1fr 2fr 0.4fr;
+    /* backdrop-filter: blur(0.5em); */
+  }
+  @media (max-width: 760px) {
+    nav {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 1080px) {
+    nav {
+      grid-template-columns: 1fr 2fr 1fr;
+    }
+  }
+  nav a {
+    /* padding: 1em 0.5em; */
+    color: white;
+    border-bottom: 0.25em solid transparent;
+    text-decoration: none;
+    /* font-family: "Atkinson", sans-serif; */
+    font-size: smaller;
+    transition: all 0.4s;
+    line-height: inherit;
+  }
+  nav a:hover {
+    color: white;
+    border-bottom: 0.25em solid white;
+  }
+  nav a.active {
+    /* text-decoration: none; */
+  }
+  .social-links,
+  .social-links a {
+    display: flex;
+  }
+  @media (max-width: 720px) {
+    .social-links {
+      display: none;
+    }
+  }
+</style>

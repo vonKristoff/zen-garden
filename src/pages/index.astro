@@ -1,16 +1,21 @@
 ---
-
+import BaseHead from "$lib/layout/BaseHead.astro";
+import Footer from "$lib/layout/Footer.astro";
+import Header from "$lib/layout/Header.astro";
+import VideoHero from "$lib/components/VideoHero/index";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+const ids = ["3411", "3412", "3413", "3414", "3415", "3416", "3417"];
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+    <div class="hero h-[100dvh]">
+      <VideoHero title={SITE_TITLE} ids={ids} client:load />
+    </div>
+    <Footer />
+  </body>
 </html>
