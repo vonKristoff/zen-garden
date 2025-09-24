@@ -1,20 +1,23 @@
 # Multi-stage build for Astro static site
 FROM node:22-alpine AS builder
 
+# Enable corepack and install latest pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 # Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy package files first for better caching
+COPY package.json pnpm-lock.yaml ./
 
-# Install dependencies
-RUN npm ci --only=production
+# Install all dependencies (including devDependencies for build)
+RUN pnpm install --frozen-lockfile
 
 # Copy source code
 COPY . .
 
 # Build the static site
-RUN npm run build
+RUN pnpm run build
 
 # Production stage - serve with nginx
 FROM nginx:alpine
@@ -22,10 +25,9 @@ FROM nginx:alpine
 # Copy built static files from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy custom nginx config (optional)
-# COPY nginx.conf /etc/nginx/nginx.conf
+# Use default nginx configuration
 
-# Expose port 80
+# Expose port (Coolify will handle port mapping)
 EXPOSE 80
 
 # Start nginx
