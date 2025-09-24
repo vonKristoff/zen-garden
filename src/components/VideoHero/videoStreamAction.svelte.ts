@@ -25,12 +25,12 @@ export default (node: HTMLVideoElement, { id }: { id: string }) => {
   };
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
   if (isIOS) node.addEventListener("loadedmetadata", canplay);
-  node.addEventListener("canplay", canplay);
+  else node.addEventListener("canplay", canplay);
   node.addEventListener("timeupdate", timeupdate);
   return {
     destroy() {
       if (isIOS) node.removeEventListener("loadedmetadata", canplay);
-      node.removeEventListener("canplay", canplay);
+      else node.removeEventListener("canplay", canplay);
       node.removeEventListener("timeupdate", timeupdate);
     },
   };
