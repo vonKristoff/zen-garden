@@ -2,7 +2,7 @@
   import videoStream from "./videoStreamAction.svelte";
   import VideoManager from "./VideoManager.svelte";
 
-  let { title, ids, children } = $props();
+  let { title, ids, children, icon } = $props();
   $effect(() => {
     VideoManager.init(ids);
   });
@@ -12,7 +12,12 @@
   class="absolute z-10 grid h-screen w-screen place-content-center font-serif"
 >
   <div class="flex flex-col justify-center items-center px-8 wrap-anywhere">
-    <h1 class="text-white text-4xl md:text-8xl">{title}</h1>
+    <h1 class="text-white text-4xl md:text-8xl">
+      {title}
+      {#if icon}
+        {@render icon()}
+      {/if}
+    </h1>
     {#if children}
       {@render children()}
     {/if}

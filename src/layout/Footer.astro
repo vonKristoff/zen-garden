@@ -1,35 +1,34 @@
 ---
-// import Icon from "./Icon.astro";
+import Icon from "../components/Icon.astro";
 const today = new Date();
 import { SITE_TITLE } from "$lib/consts";
 ---
 
 <footer>
-  <div class="flex justify-between items-center justify-center font-secondary">
-    <!-- <Icon src="shapes" ctx="shroom-6" size="5" /> -->
+  <div
+    class="flex justify-between items-center font-secondary text-red-900 px-4"
+  >
+    <Icon ctx="rain" size="8" colour="crimson" />
     <span>&copy; {today.getFullYear()} {SITE_TITLE}. All rights reserved.</span>
-    <!-- <Icon src="shapes" ctx="shroom-1" size="5" /> -->
+    <span
+      >🧰 built by <a
+        class="inline-link"
+        href="https://walthamstow.whatarewebuilding.xyz">whatarewebuilding</a
+      ></span
+    >
   </div>
 </footer>
 <style>
+  .inline-link {
+    text-decoration: underline;
+  }
   footer {
-    padding: 2em 1em 6em 1em;
-    background: linear-gradient(var(--gray-gradient)) no-repeat;
-    color: rgb(var(--gray));
+    background: linear-gradient(
+        rgb(239 83 93 / 10%),
+        rgba(255, 138, 138, 0.1325)
+      )
+      no-repeat;
     font-size: small;
     text-align: center;
-  }
-  .social-links {
-    display: flex;
-    justify-content: center;
-    gap: 1em;
-    margin-top: 1em;
-  }
-  .social-links a {
-    text-decoration: none;
-    color: rgb(var(--gray));
-  }
-  .social-links a:hover {
-    color: rgb(var(--gray-dark));
   }
 </style>

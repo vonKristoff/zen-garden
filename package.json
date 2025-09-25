@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "svg": "npx svg-symbol-sprite -i ./icons -o ./public/sprites.svg"
   },
   "dependencies": {
     "@astrojs/svelte": "^7.1.1",

@@ -5,6 +5,7 @@ interface Props {
   weight?: string;
   colour?: string;
   src?: string;
+  type?: "both" | "fill" | "stroke";
 }
 const {
   ctx,
@@ -12,6 +13,7 @@ const {
   size = "1",
   colour = "currentColor",
   src = "sprites",
+  type = "both",
 } = Astro.props;
 const href = `/${src}.svg#icon-${ctx}`;
 ---
@@ -19,8 +21,8 @@ const href = `/${src}.svg#icon-${ctx}`;
 <svg
   width={`${size}em`}
   height={`${size}em`}
-  fill="none"
-  stroke={colour}
+  fill={type === "both" ? colour : type === "fill" ? colour : "none"}
+  stroke={type === "both" ? colour : type === "stroke" ? colour : "none"}
   stroke-width={weight}
   stroke-linecap="round"
   stroke-linejoin="round"
@@ -35,5 +37,8 @@ const href = `/${src}.svg#icon-${ctx}`;
   i svg {
     width: 100%;
     height: 100%;
+  }
+  svg path {
+    fill: currentColor !important;
   }
 </style>

@@ -1,13 +1,13 @@
 ---
 import { SITE_TITLE } from "../consts";
 import HeaderLink from "$lib/components/HeaderLink.astro";
-import Icon from "./Icon.astro";
+import Icon from "$lib/components/Icon.astro";
 ---
 
 <header class="satuation-filter font-tertiary p-4">
   <nav>
     <div class="flex flex-row items-center font-secondary">
-      <!-- <Icon ctx="shroom-2" size="3" src="shapes" colour="forestgreen" /> -->
+      <Icon ctx="rain" size="3" colour="white" />
       <a href="/">{SITE_TITLE}</a>
     </div>
     <div
@@ -76,12 +76,12 @@ import Icon from "./Icon.astro";
     text-decoration: none;
     /* font-family: "Atkinson", sans-serif; */
     font-size: smaller;
-    transition: all 0.4s;
+    transition: all 0.3s;
     line-height: inherit;
   }
   nav a:hover {
     color: white;
-    border-bottom: 0.25em solid white;
+    border-bottom: 0.125em solid white;
   }
   nav a.active {
     /* text-decoration: none; */
