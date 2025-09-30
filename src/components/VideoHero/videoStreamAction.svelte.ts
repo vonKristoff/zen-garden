@@ -24,13 +24,15 @@ export default (node: HTMLVideoElement, { id }: { id: string }) => {
     }
   };
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  if (isIOS) node.addEventListener("loadedmetadata", canplay);
-  else node.addEventListener("canplay", canplay);
+  // if (isIOS) node.addEventListener("loadedmetadata", canplay);
+  // else node.addEventListener("canplay", canplay);
+  node.addEventListener("canplay", canplay);
   node.addEventListener("timeupdate", timeupdate);
   return {
     destroy() {
-      if (isIOS) node.removeEventListener("loadedmetadata", canplay);
-      else node.removeEventListener("canplay", canplay);
+      // if (isIOS) node.removeEventListener("loadedmetadata", canplay);
+      // else node.removeEventListener("canplay", canplay);
+      node.removeEventListener("canplay", canplay);
       node.removeEventListener("timeupdate", timeupdate);
     },
   };
