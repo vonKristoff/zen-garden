@@ -31,7 +31,6 @@ class VideoManager {
     );
 
     currentVideo!.dataset.status = "TRANSITION-OUT";
-    nextVideo!.dataset.status = "PLAYING";
     // target a retry here for slow connections
     await playVideoWithRetry(nextVideo);
   }
@@ -60,6 +59,7 @@ async function playVideoWithRetry(node) {
   for (let attempt = 1; attempt <= 5; attempt++) {
     try {
       await node.play();
+      node.dataset.status = "PLAYING";
       return; // Success!
     } catch (e) {
       if (attempt === 3) {
