@@ -3,6 +3,7 @@ import BaseHead from "$lib/layout/BaseHead.astro";
 import Footer from "$lib/layout/Footer.astro";
 import Header from "$lib/layout/Header.astro";
 import VideoHero from "$lib/components/VideoHero/index";
+import Icon from "../components/Icon.astro";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
 import ids from "../manifest.json";
 ---
@@ -14,6 +15,11 @@ import ids from "../manifest.json";
   <body>
     <Header />
     <div class="hero h-[100dvh]">
+      <div
+        class="loader animate-spin absolute grid place-content-center w-screen h-screen"
+      >
+        <Icon ctx="loader" size="4" colour="crimson" />
+      </div>
       <VideoHero title={SITE_TITLE} ids={ids} client:load />
     </div>
     <Footer />
@@ -21,6 +27,9 @@ import ids from "../manifest.json";
 </html>
 
 <style>
+  :global(.video-loaded .loader) {
+    display: none;
+  }
   .hero {
     position: relative;
     /* &:after {
