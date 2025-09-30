@@ -56,18 +56,20 @@ class VideoManager {
 }
 
 async function playVideoWithRetry(node) {
-  for (let attempt = 1; attempt <= 5; attempt++) {
+  const maxAttempts = 10;
+  const delay = 1000;
+  for (let attempt = 0; attempt <= maxAttempts; attempt++) {
     try {
       await node.play();
       node.dataset.status = "PLAYING";
       return; // Success!
     } catch (e) {
-      if (attempt === 3) {
+      if (attempt === maxAttempts) {
         console.error("Max retries reached. Playback failed.");
         throw e;
       }
       console.error(`Playback attempt ${attempt} failed:`, e.message);
-      await new Promise((resolve) => setTimeout(resolve, 500 * attempt));
+      await new Promise((resolve) => setTimeout(resolve, delay * attempt));
     }
   }
 }
