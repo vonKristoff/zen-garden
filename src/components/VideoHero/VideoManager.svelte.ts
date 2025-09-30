@@ -16,7 +16,7 @@ class VideoManager {
       this.collection.push(node);
     }
   }
-  next(id: string) {
+  async next(id: string) {
     const hasTransitionOut = this.collection.find(
       (video) => video.dataset.status === "TRANSITION-OUT"
     );
@@ -32,7 +32,8 @@ class VideoManager {
 
     currentVideo!.dataset.status = "TRANSITION-OUT";
     nextVideo!.dataset.status = "PLAYING";
-    nextVideo!.play();
+    // target a retry here for slow connections
+    await playVideoWithRetry(nextVideo);
   }
   stop(id: string) {
     const currentVideo = this.collection.find(
@@ -52,6 +53,22 @@ class VideoManager {
   }
   updateDebug(id: string, count: number) {
     this.debug[id] = count;
+  }
+}
+
+async function playVideoWithRetry(node) {
+  for (let attempt = 1; attempt <= 5; attempt++) {
+    try {
+      await node.play();
+      return; // Success!
+    } catch (e) {
+      if (attempt === 3) {
+        console.error("Max retries reached. Playback failed.");
+        throw e;
+      }
+      console.error(`Playback attempt ${attempt} failed:`, e.message);
+      await new Promise((resolve) => setTimeout(resolve, 500 * attempt));
+    }
   }
 }
 
