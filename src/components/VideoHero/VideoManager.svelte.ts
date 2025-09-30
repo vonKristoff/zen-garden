@@ -45,7 +45,10 @@ class VideoManager {
   getNextStream(current: (typeof this.ids)[number]) {
     const available = new Set(this.ids);
     available.delete(current);
-    return Array.from(available)[Math.floor(Math.random() * available.size)];
+    const newId =
+      Array.from(available)[Math.floor(Math.random() * available.size)];
+    console.log(newId);
+    return newId;
   }
   get playlist() {
     return this.collection;
@@ -56,6 +59,7 @@ class VideoManager {
 }
 
 async function playVideoWithRetry(node) {
+  console.log("node?", node);
   const maxAttempts = 10;
   const delay = 1000;
   for (let attempt = 0; attempt <= maxAttempts; attempt++) {
