@@ -55,7 +55,6 @@ class VideoManager {
     available.delete(current);
     const newId =
       Array.from(available)[Math.floor(Math.random() * available.size)];
-    console.log(newId);
     return newId;
   }
   get playlist() {

@@ -12,7 +12,7 @@
   class="absolute z-10 grid h-screen w-screen place-content-center font-serif"
 >
   <div class="flex flex-col justify-center items-center px-8 wrap-anywhere">
-    <h1 class="text-white text-4xl md:text-8xl">
+    <h1 id="title" class="text-red-700 text-4xl md:text-8xl">
       {title}
       {#if icon}
         {@render icon()}
@@ -43,6 +43,12 @@
 </ul> -->
 
 <style>
+  #title {
+    transition: color 1s;
+  }
+  :global(.video-loaded #title) {
+    color: white;
+  }
   .video {
     transition: all 2s;
   }

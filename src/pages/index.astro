@@ -16,7 +16,7 @@ import ids from "../manifest.json";
     <Header />
     <div class="hero h-[100dvh]">
       <div
-        class="loader animate-spin absolute grid place-content-center w-screen h-screen"
+        class="loader animate-spin absolute grid place-content-center w-screen h-[150vh]"
       >
         <Icon ctx="loader" size="4" colour="crimson" />
       </div>
@@ -30,6 +30,7 @@ import ids from "../manifest.json";
   :global(.video-loaded .loader) {
     display: none;
   }
+
   .hero {
     position: relative;
     /* &:after {
