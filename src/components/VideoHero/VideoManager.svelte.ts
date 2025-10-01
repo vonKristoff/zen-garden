@@ -12,7 +12,7 @@ class VideoManager {
       node.dataset.status = "PLAYING";
       node.play();
     }
-    if (this.collection.length !== this.ids.length) {
+    if (node && this.collection.length !== this.ids.length) {
       this.collection.push(node);
     }
   }
@@ -26,13 +26,21 @@ class VideoManager {
     const nextVideo = this.collection.find(
       (video) => video.dataset.videoId === nextId
     );
+    if (!nextVideo) return this.next(id);
     const currentVideo = this.collection.find(
       (video) => video.dataset.videoId === id
     );
 
     currentVideo!.dataset.status = "TRANSITION-OUT";
-    // target a retry here for slow connections
-    await playVideoWithRetry(nextVideo);
+
+    try {
+      await nextVideo.play();
+      nextVideo.dataset.status = "PLAYING";
+    } catch {
+      console.log("retry a different stream");
+      this.next(id);
+    }
+    // await playVideoWithRetry(nextVideo);
   }
   stop(id: string) {
     const currentVideo = this.collection.find(
@@ -59,7 +67,6 @@ class VideoManager {
 }
 
 async function playVideoWithRetry(node) {
-  console.log("node?", node);
   const maxAttempts = 10;
   const delay = 1000;
   for (let attempt = 0; attempt <= maxAttempts; attempt++) {

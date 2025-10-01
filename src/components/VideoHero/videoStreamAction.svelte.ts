@@ -1,7 +1,10 @@
 import VideoManager from "./VideoManager.svelte";
 import { S3 } from "$lib/consts";
+
 export default (node: HTMLVideoElement, { id }: { id: string }) => {
-  node.setAttribute("src", `${S3}/IMG_E${id}.mp4`);
+  let isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const path = `${S3}/${isMobile ? "mobile/" : ""}`;
+  node.setAttribute("src", `${path}IMG_E${id}.mp4`);
   node.dataset.videoId = id;
   node.volume = 0;
   node.load();
@@ -24,15 +27,15 @@ export default (node: HTMLVideoElement, { id }: { id: string }) => {
     }
   };
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  // if (isIOS) node.addEventListener("loadedmetadata", canplay);
-  // else node.addEventListener("canplay", canplay);
-  node.addEventListener("canplay", canplay);
+  if (isIOS) node.addEventListener("loadedmetadata", canplay);
+  else node.addEventListener("canplay", canplay);
+  // node.addEventListener("canplay", canplay);
   node.addEventListener("timeupdate", timeupdate);
   return {
     destroy() {
-      // if (isIOS) node.removeEventListener("loadedmetadata", canplay);
-      // else node.removeEventListener("canplay", canplay);
-      node.removeEventListener("canplay", canplay);
+      if (isIOS) node.removeEventListener("loadedmetadata", canplay);
+      else node.removeEventListener("canplay", canplay);
+      // node.removeEventListener("canplay", canplay);
       node.removeEventListener("timeupdate", timeupdate);
     },
   };
