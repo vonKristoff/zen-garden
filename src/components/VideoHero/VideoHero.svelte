@@ -29,6 +29,7 @@
       use:videoStream={{ id }}
       data-status="IDLE"
       muted
+      autoplay
       playsinline
       preload="metadata"><source src="" type="video/mp4" /></video
     >
