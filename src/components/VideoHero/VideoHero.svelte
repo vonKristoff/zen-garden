@@ -57,6 +57,7 @@
   }
   .video {
     transition: all 2s;
+    visibility: visible;
   }
   video {
     width: 100vw;
