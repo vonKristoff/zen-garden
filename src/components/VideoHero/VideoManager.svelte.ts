@@ -57,8 +57,9 @@ class VideoManager {
     );
     if (!currentVideo) return;
     currentVideo!.dataset.status = "IDLE";
-    currentVideo!.pause();
     currentVideo!.currentTime = 0;
+    currentVideo.removeAttribute("loop");
+    currentVideo!.pause();
   }
   getNextStream(current: (typeof this.ids)[number]) {
     const available = new Set(this.ids);

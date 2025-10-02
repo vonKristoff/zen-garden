@@ -20,7 +20,7 @@ export default (node: HTMLVideoElement, { id }: { id: string }) => {
       if (timeRemaining <= 2) {
         VideoManager.next(id);
       }
-      if (timeRemaining <= 0.1) {
+      if (timeRemaining <= 0.2) {
         VideoManager.stop(id);
       }
     }
