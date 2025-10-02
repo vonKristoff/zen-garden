@@ -10,12 +10,13 @@ class VideoManager {
     if (this.collection.length < 1) {
       document.documentElement.classList.add("video-loaded");
       node.dataset.status = "PLAYING";
+      node.load();
+      node.volume = 0;
       try {
-        node.load();
-        node.volume = 0;
         await node.play();
       } catch (e) {
         console.log("play errrro", e);
+        this.next(node.dataset.videoId);
       }
     }
     if (node && this.collection.length !== this.ids.length) {
@@ -35,12 +36,13 @@ class VideoManager {
     if (!nextVideo) return this.next(id);
     nextVideo.load();
     nextVideo.volume = 0;
+    nextVideo.dataset.status = "PLAYING";
 
     try {
       await nextVideo.play();
-      nextVideo.dataset.status = "PLAYING";
     } catch {
       console.log("retry a different stream");
+      nextVideo.dataset.status = "IDLE";
       this.next(id);
     }
 
