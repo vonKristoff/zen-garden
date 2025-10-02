@@ -54,6 +54,7 @@ class VideoManager {
     const currentVideo = this.collection.find(
       (video) => video.dataset.videoId === id
     );
+    if (!currentVideo) return;
     currentVideo!.dataset.status = "IDLE";
     currentVideo!.pause();
     currentVideo!.currentTime = 0;
