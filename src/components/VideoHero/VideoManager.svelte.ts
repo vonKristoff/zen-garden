@@ -22,20 +22,20 @@ class VideoManager {
       this.collection.push(node);
     }
   }
-  async next(id: string) {
-    console.log("current", id);
-    const hasTransitionOut = this.collection.find(
-      (video) => video.dataset.status === "TRANSITION-OUT"
-    );
-    if (hasTransitionOut) return;
+  async next(currentVideo, id: string) {
+    // const hasTransitionOut = this.collection.find(
+    //   (video) => video.dataset.status === "TRANSITION-OUT"
+    // );
+    // if (hasTransitionOut) return;
+    if (currentVideo.dataset.status === "TRANSITION-OUT") return;
+    currentVideo!.dataset.status = "TRANSITION-OUT";
 
     const nextId = this.getNextStream(id);
     console.log("attempt next", nextId);
     const nextVideo = this.collection.find(
       (video) => video.dataset.videoId === nextId
     );
-    if (!nextVideo) return this.next(id);
-    console.log("nextVideo", nextVideo.dataset);
+    // if (!nextVideo) return this.next(id);
 
     try {
       await nextVideo.play();
@@ -43,24 +43,24 @@ class VideoManager {
     } catch {
       console.log("retry a different stream");
       nextVideo.dataset.status = "IDLE";
-      this.next(id);
+      // this.next(id);
     }
 
-    const currentVideo = this.collection.find(
-      (video) => video.dataset.videoId === id
-    );
-    currentVideo!.dataset.status = "TRANSITION-OUT";
+    // const currentVideo = this.collection.find(
+    //   (video) => video.dataset.videoId === id
+    // );
     // await playVideoWithRetry(nextVideo);
   }
-  stop(id: string) {
-    const currentVideo = this.collection.find(
-      (video) => video.dataset.videoId === id
-    );
-    if (!currentVideo) return;
+  stop(currentVideo: HTMLAudioElement) {
+    console.log("STOPPING");
+    // const currentVideo = this.collection.find(
+    //   (video) => video.dataset.videoId === id
+    // );
+    // if (!currentVideo) return;
     currentVideo!.dataset.status = "IDLE";
-    currentVideo!.currentTime = 0;
     currentVideo.removeAttribute("loop");
     currentVideo!.pause();
+    currentVideo!.currentTime = 0;
   }
   getNextStream(current: (typeof this.ids)[number]) {
     const available = new Set(this.ids);

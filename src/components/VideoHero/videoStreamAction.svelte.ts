@@ -17,9 +17,9 @@ export default (node: HTMLVideoElement, { id }: { id: string }) => {
   const timeupdate = (e) => {
     if ((e.target as HTMLVideoElement).dataset.videoId === id) {
       const timeRemaining = node.duration - node.currentTime;
-      VideoManager.updateDebug(id, timeRemaining);
+      // VideoManager.updateDebug(id, timeRemaining);
       if (timeRemaining <= 2) {
-        VideoManager.next(id);
+        VideoManager.next(node, id);
       }
       // if (timeRemaining <= 0.2) {
       //   VideoManager.stop(id);
@@ -31,7 +31,7 @@ export default (node: HTMLVideoElement, { id }: { id: string }) => {
   else node.addEventListener("canplay", canplay);
   // node.addEventListener("canplay", canplay);
   node.addEventListener("timeupdate", timeupdate);
-  node.addEventListener("ended", () => VideoManager.stop(node.dataset.videoId));
+  node.addEventListener("ended", () => VideoManager.stop(node));
   return {
     destroy() {
       if (isIOS) node.removeEventListener("loadedmetadata", canplay);
