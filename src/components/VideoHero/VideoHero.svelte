@@ -64,7 +64,7 @@
   }
   :global(.video:has(video[data-status="TRANSITION-OUT"])) {
     opacity: 0;
-    z-index: 2;
+    z-index: 1;
   }
   :global(.video:has(video[data-status="IDLE"])) {
     opacity: 0;
@@ -72,6 +72,6 @@
   }
   :global(.video:has(video[data-status="PLAYING"])) {
     opacity: 1;
-    z-index: 1;
+    z-index: 10;
   }
 </style>

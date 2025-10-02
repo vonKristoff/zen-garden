@@ -35,11 +35,6 @@ class VideoManager {
     if (!nextVideo) return this.next(id);
     nextVideo.load();
     nextVideo.volume = 0;
-    const currentVideo = this.collection.find(
-      (video) => video.dataset.videoId === id
-    );
-
-    currentVideo!.dataset.status = "TRANSITION-OUT";
 
     try {
       await nextVideo.play();
@@ -48,6 +43,11 @@ class VideoManager {
       console.log("retry a different stream");
       this.next(id);
     }
+
+    const currentVideo = this.collection.find(
+      (video) => video.dataset.videoId === id
+    );
+    currentVideo!.dataset.status = "TRANSITION-OUT";
     // await playVideoWithRetry(nextVideo);
   }
   stop(id: string) {
