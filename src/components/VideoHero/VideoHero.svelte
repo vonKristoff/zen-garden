@@ -36,7 +36,7 @@
       muted
       loop
       playsinline
-      preload="metadata"><source src={getPath(id)} type="video/mp4" /></video
+      preload="auto"><source src={getPath(id)} type="video/mp4" /></video
     >
   </div>
 {/each}
@@ -68,6 +68,7 @@
     z-index: 5;
   }
   :global(.video:has(video[data-status="IDLE"])) {
+    visibility: hidden;
     opacity: 0;
     z-index: 0;
   }
