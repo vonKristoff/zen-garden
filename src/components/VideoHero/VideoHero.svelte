@@ -36,7 +36,7 @@
       muted
       loop
       playsinline
-      preload="auto"><source src={getPath(id)} type="video/mp4" /></video
+      preload="metadata"><source src={getPath(id)} type="video/mp4" /></video
     >
   </div>
 {/each}
