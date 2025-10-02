@@ -26,6 +26,7 @@
 {#each VideoManager.ids as id}
   <div class="video absolute grid place-content-center">
     <video
+      ontouchend={(e) => e?.target?.load()}
       use:videoStream={{ id }}
       data-status="IDLE"
       muted

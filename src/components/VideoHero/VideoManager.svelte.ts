@@ -10,6 +10,10 @@ class VideoManager {
     if (this.collection.length < 1) {
       document.documentElement.classList.add("video-loaded");
       node.dataset.status = "PLAYING";
+      setInterval(async () => {
+        const res = await node.play();
+        console.log(res);
+      }, 1000);
       try {
         await node.play();
       } catch (e) {
