@@ -23,18 +23,19 @@ class VideoManager {
     }
   }
   async next(id: string) {
-    console.log("current", id, "attempt next");
+    console.log("current", id);
     const hasTransitionOut = this.collection.find(
       (video) => video.dataset.status === "TRANSITION-OUT"
     );
     if (hasTransitionOut) return;
 
     const nextId = this.getNextStream(id);
+    console.log("attempt next", nextId);
     const nextVideo = this.collection.find(
       (video) => video.dataset.videoId === nextId
     );
     if (!nextVideo) return this.next(id);
-    nextVideo.volume = 0;
+    console.log("nextVideo", nextVideo.dataset);
 
     try {
       await nextVideo.play();

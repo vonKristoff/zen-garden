@@ -7,6 +7,7 @@ export default (node: HTMLVideoElement, { id }: { id: string }) => {
   // node.setAttribute("src", `${path}IMG_E${id}.mp4`);
   node.dataset.videoId = id;
   node.load();
+  node.volume = 0;
   const canplay = (e) => {
     if ((e.target as HTMLVideoElement).dataset.videoId === id) {
       VideoManager.ready(node);
@@ -20,9 +21,9 @@ export default (node: HTMLVideoElement, { id }: { id: string }) => {
       if (timeRemaining <= 2) {
         VideoManager.next(id);
       }
-      if (timeRemaining <= 0.2) {
-        VideoManager.stop(id);
-      }
+      // if (timeRemaining <= 0.2) {
+      //   VideoManager.stop(id);
+      // }
     }
   };
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -30,6 +31,7 @@ export default (node: HTMLVideoElement, { id }: { id: string }) => {
   else node.addEventListener("canplay", canplay);
   // node.addEventListener("canplay", canplay);
   node.addEventListener("timeupdate", timeupdate);
+  node.addEventListener("ended", () => VideoManager.stop(node.dataset.videoId));
   return {
     destroy() {
       if (isIOS) node.removeEventListener("loadedmetadata", canplay);
