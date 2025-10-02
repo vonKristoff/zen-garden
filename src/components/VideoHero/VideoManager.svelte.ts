@@ -12,6 +12,7 @@ class VideoManager {
       node.dataset.status = "PLAYING";
       try {
         node.load();
+        node.volume = 0;
         await node.play();
       } catch (e) {
         console.log("play errrro", e);
@@ -33,6 +34,7 @@ class VideoManager {
     );
     if (!nextVideo) return this.next(id);
     nextVideo.load();
+    nextVideo.volume = 0;
     const currentVideo = this.collection.find(
       (video) => video.dataset.videoId === id
     );

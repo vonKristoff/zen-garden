@@ -6,8 +6,7 @@ export default (node: HTMLVideoElement, { id }: { id: string }) => {
   const path = `${S3}/${isMobile ? "mobile/" : ""}`;
   node.setAttribute("src", `${path}IMG_E${id}.mp4`);
   node.dataset.videoId = id;
-  node.volume = 0;
-  node.load();
+
   const canplay = (e) => {
     if ((e.target as HTMLVideoElement).dataset.videoId === id) {
       VideoManager.ready(node);
