@@ -9,11 +9,10 @@ class VideoManager {
     this.updateDebug(node.dataset.videoId, node.duration);
     if (this.collection.length < 1) {
       document.documentElement.classList.add("video-loaded");
-      node.dataset.status = "PLAYING";
-      node.load();
       node.volume = 0;
       try {
         await node.play();
+        node.dataset.status = "PLAYING";
       } catch (e) {
         console.log("play errrro", e);
         this.next(node.dataset.videoId);
@@ -24,6 +23,7 @@ class VideoManager {
     }
   }
   async next(id: string) {
+    console.log("current", id, "attempt next");
     const hasTransitionOut = this.collection.find(
       (video) => video.dataset.status === "TRANSITION-OUT"
     );
@@ -34,12 +34,11 @@ class VideoManager {
       (video) => video.dataset.videoId === nextId
     );
     if (!nextVideo) return this.next(id);
-    nextVideo.load();
     nextVideo.volume = 0;
-    nextVideo.dataset.status = "PLAYING";
 
     try {
       await nextVideo.play();
+      nextVideo.dataset.status = "PLAYING";
     } catch {
       console.log("retry a different stream");
       nextVideo.dataset.status = "IDLE";
