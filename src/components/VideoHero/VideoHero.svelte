@@ -1,11 +1,16 @@
 <script lang="ts">
   import videoStream from "./videoStreamAction.svelte";
   import VideoManager from "./VideoManager.svelte";
-
+  import { S3 } from "$lib/consts";
   let { title, ids, children, icon } = $props();
   $effect(() => {
     VideoManager.init(ids);
   });
+  function getPath(id) {
+    let isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const path = `${S3}/${isMobile ? "mobile/" : ""}`;
+    return `${path}IMG_E${id}.mp4`;
+  }
 </script>
 
 <div
@@ -26,12 +31,11 @@
 {#each VideoManager.ids as id}
   <div class="video absolute grid place-content-center">
     <video
-      ontouchend={(e) => e?.target?.load()}
       use:videoStream={{ id }}
       data-status="IDLE"
       muted
       playsinline
-      preload="metadata"><source src="" type="video/mp4" /></video
+      preload="metadata"><source src={getPath(id)} type="video/mp4" /></video
     >
   </div>
 {/each}

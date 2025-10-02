@@ -10,11 +10,8 @@ class VideoManager {
     if (this.collection.length < 1) {
       document.documentElement.classList.add("video-loaded");
       node.dataset.status = "PLAYING";
-      setInterval(async () => {
-        const res = await node.play();
-        console.log(res);
-      }, 1000);
       try {
+        node.load();
         await node.play();
       } catch (e) {
         console.log("play errrro", e);
@@ -35,6 +32,7 @@ class VideoManager {
       (video) => video.dataset.videoId === nextId
     );
     if (!nextVideo) return this.next(id);
+    nextVideo.load();
     const currentVideo = this.collection.find(
       (video) => video.dataset.videoId === id
     );
