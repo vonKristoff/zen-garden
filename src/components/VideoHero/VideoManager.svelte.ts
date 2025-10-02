@@ -5,12 +5,16 @@ class VideoManager {
   init(ids: string[]) {
     this.ids = ids;
   }
-  ready(node: HTMLVideoElement) {
+  async ready(node: HTMLVideoElement) {
     this.updateDebug(node.dataset.videoId, node.duration);
     if (this.collection.length < 1) {
       document.documentElement.classList.add("video-loaded");
       node.dataset.status = "PLAYING";
-      node.play();
+      try {
+        await node.play();
+      } catch (e) {
+        console.log("play errrro", e);
+      }
     }
     if (node && this.collection.length !== this.ids.length) {
       this.collection.push(node);
