@@ -31,7 +31,10 @@ export default (node: HTMLVideoElement, { id }: { id: string }) => {
   else node.addEventListener("canplay", canplay);
   // node.addEventListener("canplay", canplay);
   node.addEventListener("timeupdate", timeupdate);
-  node.addEventListener("ended", () => VideoManager.stop(node));
+  node.addEventListener("ended", () => {
+    console.log("ended");
+    VideoManager.stop(node);
+  });
   return {
     destroy() {
       if (isIOS) node.removeEventListener("loadedmetadata", canplay);

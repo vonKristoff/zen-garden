@@ -57,7 +57,6 @@
   }
   .video {
     transition: all 2s;
-    visibility: visible;
   }
   video {
     width: 100vw;
@@ -69,7 +68,6 @@
     z-index: 5;
   }
   :global(.video:has(video[data-status="IDLE"])) {
-    visibility: hidden;
     opacity: 0;
     z-index: 0;
   }
