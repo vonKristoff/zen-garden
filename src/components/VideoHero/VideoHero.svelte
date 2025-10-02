@@ -34,9 +34,9 @@
       use:videoStream={{ id }}
       data-status="IDLE"
       muted
-      loop={true}
+      loop
       playsinline
-      preload="metadata"><source src={getPath(id)} type="video/mp4" /></video
+      preload="auto"><source src={getPath(id)} type="video/mp4" /></video
     >
   </div>
 {/each}
