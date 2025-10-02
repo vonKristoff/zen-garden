@@ -36,7 +36,7 @@
       muted
       loop
       playsinline
-      preload="auto"><source src={getPath(id)} type="video/mp4" /></video
+      preload="metadata"><source src={getPath(id)} type="video/mp4" /></video
     >
   </div>
 {/each}
@@ -65,7 +65,7 @@
   }
   :global(.video:has(video[data-status="TRANSITION-OUT"])) {
     opacity: 0;
-    z-index: 1;
+    z-index: 5;
   }
   :global(.video:has(video[data-status="IDLE"])) {
     opacity: 0;
@@ -73,6 +73,6 @@
   }
   :global(.video:has(video[data-status="PLAYING"])) {
     opacity: 1;
-    z-index: 10;
+    z-index: 2;
   }
 </style>
