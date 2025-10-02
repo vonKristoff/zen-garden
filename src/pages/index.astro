@@ -6,10 +6,9 @@ import VideoHero from "$lib/components/VideoHero/index";
 import Icon from "../components/Icon.astro";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
 import ids from "../manifest.json";
-let interacted = $state(false);
 ---
 
-<html lang="en" ontouchstart={() => (interacted = true)}>
+<html lang="en">
   <head>
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
   </head>
