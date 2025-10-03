@@ -5,7 +5,7 @@ class VideoManager {
   init(ids: string[]) {
     this.ids = ids;
   }
-  async ready(node: HTMLVideoElement) {
+  async ready(node: HTMLVideoElement): Promise<void> {
     this.updateDebug(node.dataset.videoId, node.duration);
     node.volume = 0;
     if (this.collection.length < 1) {
@@ -14,49 +14,33 @@ class VideoManager {
         await node.play();
         node.dataset.status = "PLAYING";
       } catch (e) {
-        console.log("play errrro", e);
-        this.next(node.dataset.videoId);
+        console.error("Cannot play this", e);
+        this.next(node, node.dataset.videoId);
       }
     }
     if (node && this.collection.length !== this.ids.length) {
       this.collection.push(node);
     }
   }
-  async next(currentVideo, id: string) {
-    // const hasTransitionOut = this.collection.find(
-    //   (video) => video.dataset.status === "TRANSITION-OUT"
-    // );
-    // if (hasTransitionOut) return;
+  async next(currentVideo: HTMLVideoElement, id: string): Promise<void> {
     if (currentVideo.dataset.status === "TRANSITION-OUT") return;
     currentVideo!.dataset.status = "TRANSITION-OUT";
 
     const nextId = this.getNextStream(id);
-    console.log("attempt next", nextId);
     const nextVideo = this.collection.find(
       (video) => video.dataset.videoId === nextId
     );
-    // if (!nextVideo) return this.next(id);
+    if (!nextVideo) return this.next(currentVideo, id);
 
     try {
       await nextVideo.play();
       nextVideo.dataset.status = "PLAYING";
     } catch {
-      console.log("retry a different stream");
+      console.error("Cannot connect to stream");
       nextVideo.dataset.status = "IDLE";
-      // this.next(id);
     }
-
-    // const currentVideo = this.collection.find(
-    //   (video) => video.dataset.videoId === id
-    // );
-    // await playVideoWithRetry(nextVideo);
   }
   stop(currentVideo: HTMLAudioElement) {
-    console.log("STOPPING");
-    // const currentVideo = this.collection.find(
-    //   (video) => video.dataset.videoId === id
-    // );
-    // if (!currentVideo) return;
     currentVideo!.dataset.status = "IDLE";
     currentVideo!.pause();
     currentVideo!.currentTime = 0;

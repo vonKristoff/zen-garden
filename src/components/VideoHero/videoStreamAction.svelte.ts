@@ -1,10 +1,6 @@
 import VideoManager from "./VideoManager.svelte";
-import { S3 } from "$lib/consts";
 
 export default (node: HTMLVideoElement, { id }: { id: string }) => {
-  // let isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  // const path = `${S3}/${isMobile ? "mobile/" : ""}`;
-  // node.setAttribute("src", `${path}IMG_E${id}.mp4`);
   node.dataset.videoId = id;
   node.load();
   node.removeAttribute("loop");
@@ -17,13 +13,14 @@ export default (node: HTMLVideoElement, { id }: { id: string }) => {
   const timeupdate = (e) => {
     if ((e.target as HTMLVideoElement).dataset.videoId === id) {
       const timeRemaining = node.duration - node.currentTime;
-      // VideoManager.updateDebug(id, timeRemaining);
       if (timeRemaining <= 2) {
         VideoManager.next(node, id);
       }
-      // if (timeRemaining <= 0.2) {
-      //   VideoManager.stop(id);
-      // }
+    }
+  };
+  const ended = (e) => {
+    if ((e.target as HTMLVideoElement).dataset.videoId === id) {
+      VideoManager.stop(node);
     }
   };
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -31,15 +28,13 @@ export default (node: HTMLVideoElement, { id }: { id: string }) => {
   else node.addEventListener("canplay", canplay);
   // node.addEventListener("canplay", canplay);
   node.addEventListener("timeupdate", timeupdate);
-  node.addEventListener("ended", () => {
-    console.log("ended");
-    VideoManager.stop(node);
-  });
+  node.addEventListener("ended", ended);
   return {
     destroy() {
       if (isIOS) node.removeEventListener("loadedmetadata", canplay);
       else node.removeEventListener("canplay", canplay);
       // node.removeEventListener("canplay", canplay);
+      node.removeEventListener("ended", ended);
       node.removeEventListener("timeupdate", timeupdate);
     },
   };
