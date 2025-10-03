@@ -7,7 +7,7 @@ export default (node: HTMLVideoElement, { id }: { id: string }) => {
   // node.setAttribute("src", `${path}IMG_E${id}.mp4`);
   node.dataset.videoId = id;
   node.load();
-  node.volume = 0;
+  node.removeAttribute("loop");
   const canplay = (e) => {
     if ((e.target as HTMLVideoElement).dataset.videoId === id) {
       VideoManager.ready(node);

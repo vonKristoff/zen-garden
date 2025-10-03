@@ -7,9 +7,9 @@ class VideoManager {
   }
   async ready(node: HTMLVideoElement) {
     this.updateDebug(node.dataset.videoId, node.duration);
+    node.volume = 0;
     if (this.collection.length < 1) {
       document.documentElement.classList.add("video-loaded");
-      node.volume = 0;
       try {
         await node.play();
         node.dataset.status = "PLAYING";
@@ -58,7 +58,6 @@ class VideoManager {
     // );
     // if (!currentVideo) return;
     currentVideo!.dataset.status = "IDLE";
-    currentVideo.removeAttribute("loop");
     currentVideo!.pause();
     currentVideo!.currentTime = 0;
   }
