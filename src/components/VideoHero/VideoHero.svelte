@@ -1,16 +1,9 @@
 <script lang="ts">
   import videoStream from "./videoStreamAction.svelte";
   import VideoManager from "./VideoManager.svelte";
-  import { S3 } from "$lib/consts";
+  import { onMount } from "svelte";
   let { title, ids, children, icon } = $props();
-  $effect(() => {
-    VideoManager.init(ids);
-  });
-  function getPath(id) {
-    let isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    const path = `${S3}/${isMobile ? "mobile/" : ""}`;
-    return `${path}IMG_E${id}.mp4`;
-  }
+  onMount(() => VideoManager.init(ids));
 </script>
 
 <div
@@ -28,25 +21,37 @@
     {/if}
   </div>
 </div>
-{#each VideoManager.ids as id}
-  <div class="video absolute grid place-content-center">
+
+<!-- {#each VideoManager.ids as id}
+<div class="video absolute grid place-content-center">
+  <video
+    use:videoStream={{ id }}
+    data-status="IDLE"
+    muted
+    loop
+    playsinline
+    preload="metadata"><source src="" type="video/mp4" /></video
+  >
+</div>
+{/each} -->
+{#if VideoManager.ids.length}
+  <div class="video grid place-content-center">
     <video
-      use:videoStream={{ id }}
+      use:videoStream={{ player: "SATURN" }}
       data-status="IDLE"
       muted
-      loop
       playsinline
-      preload="metadata"><source src={getPath(id)} type="video/mp4" /></video
+      preload="metadata"><source src="" type="video/mp4" /></video
+    >
+    <video
+      use:videoStream={{ player: "VENUS" }}
+      data-status="IDLE"
+      muted
+      playsinline
+      preload="metadata"><source src="" type="video/mp4" /></video
     >
   </div>
-{/each}
-
-<!-- 
-<ul class="absolute bottom-0 z-20">
-  {#each VideoManager.ids as id}
-    <li>{id}: {VideoManager.debug?.[id] || 0}</li>
-  {/each}
-</ul> -->
+{/if}
 
 <style>
   #title {
@@ -56,23 +61,30 @@
     color: white;
   }
   .video {
+    position: relative;
     transition: all 2s;
   }
   video {
+    transition: all 4s;
+    position: absolute;
     width: 100vw;
     height: 100dvh;
     object-fit: cover;
   }
-  :global(.video:has(video[data-status="TRANSITION-OUT"])) {
+  :global(video[data-status="TRANSITION-OUT"]) {
     opacity: 0;
     z-index: 5;
   }
-  :global(.video:has(video[data-status="IDLE"])) {
+  :global(video[data-status="IDLE"]) {
     opacity: 0;
     z-index: 0;
   }
-  :global(.video:has(video[data-status="PLAYING"])) {
+  :global(video[data-status="READY"]) {
+    opacity: 0;
+    z-index: 0;
+  }
+  :global(video[data-status="PLAYING"]) {
     opacity: 1;
-    z-index: 2;
+    z-index: 1;
   }
 </style>

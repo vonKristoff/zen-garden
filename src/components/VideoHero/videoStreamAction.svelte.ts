@@ -1,25 +1,24 @@
 import VideoManager from "./VideoManager.svelte";
 
-export default (node: HTMLVideoElement, { id }: { id: string }) => {
-  node.dataset.videoId = id;
-  node.load();
-  node.removeAttribute("loop");
+export default (node: HTMLVideoElement, { player }: { player: string }) => {
+  VideoManager.setupNode(player, node);
+
   const canplay = (e) => {
-    if ((e.target as HTMLVideoElement).dataset.videoId === id) {
+    if ((e.target as HTMLVideoElement).dataset.player === player) {
       VideoManager.ready(node);
     }
   };
 
   const timeupdate = (e) => {
-    if ((e.target as HTMLVideoElement).dataset.videoId === id) {
+    if ((e.target as HTMLVideoElement).dataset.player === player) {
       const timeRemaining = node.duration - node.currentTime;
       if (timeRemaining <= 2) {
-        VideoManager.next(node, id);
+        VideoManager.next(node);
       }
     }
   };
   const ended = (e) => {
-    if ((e.target as HTMLVideoElement).dataset.videoId === id) {
+    if ((e.target as HTMLVideoElement).dataset.player === player) {
       VideoManager.stop(node);
     }
   };

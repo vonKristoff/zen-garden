@@ -1,49 +1,88 @@
+import { S3 } from "$lib/consts";
+interface Player {
+  id: string;
+  node: HTMLVideoElement;
+}
 class VideoManager {
   ids: string[] = $state([]);
-  collection = $state<HTMLVideoElement[]>([]);
-  debug = $state<Record<string, number>>({});
+  playback = $state<Player[]>([]);
+  queue = $state<string[]>([]);
+
+  loaded = false;
+
   init(ids: string[]) {
     this.ids = ids;
+    // preload 2 players
+    const randomId = this.getNextStream(
+      this.ids[Math.floor(this.ids.length * Math.random())]
+    );
+    this.queue.push(randomId);
+    this.queue.push(this.getNextStream(randomId));
   }
+  setupNode(id: string, node: HTMLVideoElement) {
+    const video = this.queue.pop();
+    node.dataset.player = id;
+    node.dataset.video = video;
+    node.src = this.getPath(video);
+    node.load();
+    this.playback.push({ id, node });
+  }
+
   async ready(node: HTMLVideoElement): Promise<void> {
-    this.updateDebug(node.dataset.videoId, node.duration);
-    node.volume = 0;
-    if (this.collection.length < 1) {
-      document.documentElement.classList.add("video-loaded");
+    document.documentElement.classList.add("video-loaded");
+    // START first video
+    if (!this.loaded) {
       try {
+        node.volume = 0;
         await node.play();
+        this.loaded = true;
         node.dataset.status = "PLAYING";
       } catch (e) {
         console.error("Cannot play this", e);
-        this.next(node, node.dataset.videoId);
       }
+    } else {
+      node.dataset.status = "READY";
     }
-    if (node && this.collection.length !== this.ids.length) {
-      this.collection.push(node);
+    // TODO TEST IF NEEEDD []
+    if (!this.queue.length) {
+      this.queue.push(this.getNextStream(node.dataset.video as string));
     }
   }
-  async next(currentVideo: HTMLVideoElement, id: string): Promise<void> {
+  async next(currentVideo: HTMLVideoElement): Promise<void> {
     if (currentVideo.dataset.status === "TRANSITION-OUT") return;
     currentVideo!.dataset.status = "TRANSITION-OUT";
 
-    const nextId = this.getNextStream(id);
-    const nextVideo = this.collection.find(
-      (video) => video.dataset.videoId === nextId
+    const { node } = this.playback.find(
+      ({ node }) => node.dataset.status === "READY"
     );
-    if (!nextVideo) return this.next(currentVideo, id);
-
     try {
-      await nextVideo.play();
-      nextVideo.dataset.status = "PLAYING";
+      await node.play();
+      node.dataset.status = "PLAYING";
+      this.queue.push(this.getNextStream(node.dataset.video));
     } catch {
       console.error("Cannot connect to stream");
-      nextVideo.dataset.status = "IDLE";
+      // TODO TEST
+      // node.dataset.status = "IDLE";
     }
   }
-  stop(currentVideo: HTMLAudioElement) {
+
+  getPath(id: string) {
+    let isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const path = `${S3}/${isMobile ? "mobile/" : ""}`;
+    return `${path}IMG_E${id}.mp4`;
+  }
+
+  stop(currentVideo: HTMLVideoElement) {
+    // stop finished video
     currentVideo!.dataset.status = "IDLE";
     currentVideo!.pause();
     currentVideo!.currentTime = 0;
+    // prepare next video stream
+    if (this.queue.length) {
+      currentVideo.dataset.video = this.queue.pop() as string;
+      currentVideo.src = this.getPath(currentVideo.dataset.video);
+      currentVideo.load();
+    }
   }
   getNextStream(current: (typeof this.ids)[number]) {
     const available = new Set(this.ids);
@@ -51,31 +90,6 @@ class VideoManager {
     const newId =
       Array.from(available)[Math.floor(Math.random() * available.size)];
     return newId;
-  }
-  get playlist() {
-    return this.collection;
-  }
-  updateDebug(id: string, count: number) {
-    this.debug[id] = count;
-  }
-}
-
-async function playVideoWithRetry(node) {
-  const maxAttempts = 10;
-  const delay = 1000;
-  for (let attempt = 0; attempt <= maxAttempts; attempt++) {
-    try {
-      await node.play();
-      node.dataset.status = "PLAYING";
-      return; // Success!
-    } catch (e) {
-      if (attempt === maxAttempts) {
-        console.error("Max retries reached. Playback failed.");
-        throw e;
-      }
-      console.error(`Playback attempt ${attempt} failed:`, e.message);
-      await new Promise((resolve) => setTimeout(resolve, delay * attempt));
-    }
   }
 }
 
