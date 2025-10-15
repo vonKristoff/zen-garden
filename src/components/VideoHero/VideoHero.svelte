@@ -65,7 +65,7 @@
     transition: all 2s;
   }
   video {
-    transition: all 4s;
+    transition: all 2s;
     position: absolute;
     width: 100vw;
     height: 100dvh;

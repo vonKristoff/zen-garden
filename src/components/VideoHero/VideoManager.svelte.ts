@@ -7,8 +7,7 @@ class VideoManager {
   ids: string[] = $state([]);
   playback = $state<Player[]>([]);
   queue = $state<string[]>([]);
-
-  loaded = false;
+  isPlaying = $state(false);
 
   init(ids: string[]) {
     this.ids = ids;
@@ -29,40 +28,33 @@ class VideoManager {
   }
 
   async ready(node: HTMLVideoElement): Promise<void> {
-    document.documentElement.classList.add("video-loaded");
-    // START first video
-    if (!this.loaded) {
+    node.dataset.status = "READY";
+    // IF FIRST VIDEO
+    if (!this.isPlaying) {
+      this.isPlaying = true;
+      node.volume = 0;
+      node.dataset.status = "PLAYING";
+      document.documentElement.classList.add("video-loaded");
       try {
-        node.volume = 0;
         await node.play();
-        this.loaded = true;
-        node.dataset.status = "PLAYING";
       } catch (e) {
         console.error("Cannot play this", e);
       }
-    } else {
-      node.dataset.status = "READY";
-    }
-    // TODO TEST IF NEEEDD []
-    if (!this.queue.length) {
-      this.queue.push(this.getNextStream(node.dataset.video as string));
     }
   }
   async next(currentVideo: HTMLVideoElement): Promise<void> {
     if (currentVideo.dataset.status === "TRANSITION-OUT") return;
     currentVideo!.dataset.status = "TRANSITION-OUT";
 
-    const { node } = this.playback.find(
+    const next = this.playback.find(
       ({ node }) => node.dataset.status === "READY"
     );
     try {
-      await node.play();
-      node.dataset.status = "PLAYING";
-      this.queue.push(this.getNextStream(node.dataset.video));
+      await next.node.play();
+      next.node.dataset.status = "PLAYING";
+      this.queue.push(this.getNextStream(next.node.dataset.video));
     } catch {
       console.error("Cannot connect to stream");
-      // TODO TEST
-      // node.dataset.status = "IDLE";
     }
   }
 
